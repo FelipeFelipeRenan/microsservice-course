@@ -48,18 +48,27 @@ public class MathController {
         return divided;
     }
 
-    @RequestMapping(value = "/sqrt/{numberOne}/{numberTwo}", method = RequestMethod.GET)
-    public Integer sqrt(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception{
+    @RequestMapping(value = "/sqrt/{numberOne}", method = RequestMethod.GET)
+    public Double sqrt(@PathVariable("numberOne") String numberOne) throws Exception{
+        if(!isNumeric(numberOne)){
+            throw new UnsupportedMethodOperationException("Please set a numeric value");
+        }
+        Double convertedNumber = convertToDouble(numberOne);
+        if(convertedNumber < 0){
+            throw new UnsupportedMethodOperationException("The value must be a positive number");
+        }
+        Double sqrt = Math.sqrt(convertedNumber);
+        return sqrt;
+    }
+    @RequestMapping(value = "/mean/{numberOne}/{numberTwo}", method = RequestMethod.GET)
+    public Double mean(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception{
         if(!isNumeric(numberOne) || !isNumeric(numberTwo)){
             throw new UnsupportedMethodOperationException("Please set a numeric value");
         }
-        if(numberTwo.equals("0") ){
-            throw new UnsupportedMethodOperationException("Second number must be different than 0");
 
-        }
 
-        Integer sqrt = Math.sqrt(convertToDouble(numberOne), convertToDouble(numberTwo));
-        return sqrt;
+        Double mean = (convertToDouble(numberOne) + convertToDouble(numberTwo)) / 2;
+        return mean;
     }
 
     public Double convertToDouble(String strNumber) {
@@ -73,6 +82,7 @@ public class MathController {
         return 1D;
 
     }
+
 
     private boolean isNumeric(String strNumber) {
         if (strNumber == null) {
