@@ -2,7 +2,11 @@ package br.com.felipe.foo;
 
 
 import br.com.felipe.foo.exception.UnsupportedMethodOperationException;
+import br.com.felipe.foo.math.SimpleMath;
 import org.springframework.web.bind.annotation.*;
+
+import static br.com.felipe.foo.request.converters.NumberConverter.convertToDouble;
+import static br.com.felipe.foo.request.converters.NumberConverter.isNumeric;
 
 @RestController
 public class MathController {
@@ -12,7 +16,7 @@ public class MathController {
         if (!isNumeric(numberOne) || !isNumeric(numberTwo)) {
             throw new UnsupportedMethodOperationException("Please set a numeric value");
         }
-        return convertToDouble(numberOne) + convertToDouble(numberTwo);
+        return SimpleMath.sum(convertToDouble(numberOne), convertToDouble(numberTwo));
     }
 
     @GetMapping(value = "/minus/{numberOne}/{numberTwo}")
@@ -21,7 +25,7 @@ public class MathController {
             throw new UnsupportedMethodOperationException("Please set a numeric value");
         }
 
-        return convertToDouble(numberOne) - convertToDouble(numberTwo);
+        return SimpleMath.minus(convertToDouble(numberOne) , convertToDouble(numberTwo));
     }
 
     @GetMapping(value = "/times/{numberOne}/{numberTwo}")
@@ -30,7 +34,7 @@ public class MathController {
             throw new UnsupportedMethodOperationException("Please set a numeric value");
         }
 
-        return convertToDouble(numberOne) * convertToDouble(numberTwo);
+        return SimpleMath.times(convertToDouble(numberOne) , convertToDouble(numberTwo));
     }
 
     @GetMapping(value = "/divided/{numberOne}/{numberTwo}")
@@ -44,7 +48,7 @@ public class MathController {
         }
 
 
-        return convertToDouble(numberOne) / convertToDouble(numberTwo);
+        return SimpleMath.divided(convertToDouble(numberOne) , convertToDouble(numberTwo));
     }
 
     @GetMapping(value = "/sqrt/{numberOne}")
@@ -57,7 +61,7 @@ public class MathController {
             throw new UnsupportedMethodOperationException("The value must be a positive number");
         }
 
-        return Math.sqrt(convertedNumber);
+        return SimpleMath.sqrt(convertedNumber);
     }
     @GetMapping(value = "/mean/{numberOne}/{numberTwo}")
     public Double mean(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception{
@@ -65,29 +69,7 @@ public class MathController {
             throw new UnsupportedMethodOperationException("Please set a numeric value");
         }
 
-        return  (convertToDouble(numberOne) + convertToDouble(numberTwo)) / 2;
-    }
-
-    public Double convertToDouble(String strNumber) {
-        if (strNumber == null) {
-            return 0D;
-        }
-        String number = strNumber.replaceAll(",", ".");
-        if(isNumeric(number)){
-            return Double.parseDouble(number);
-        }
-        return 1D;
-
-    }
-
-
-    private boolean isNumeric(String strNumber) {
-        if (strNumber == null) {
-            return false;
-        }
-        String number = strNumber.replaceAll(",", ".");
-        return number.matches("[-+]?[0-9]*\\.?[0-9]+");
-
+        return  SimpleMath.mean(convertToDouble(numberOne) , convertToDouble(numberTwo));
     }
 
 
