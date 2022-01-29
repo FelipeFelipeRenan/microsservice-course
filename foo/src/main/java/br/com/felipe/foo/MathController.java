@@ -2,10 +2,7 @@ package br.com.felipe.foo;
 
 
 import br.com.felipe.foo.exception.UnsupportedMethodOperationException;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class MathController {
@@ -17,6 +14,52 @@ public class MathController {
         }
         Double sum = convertToDouble(numberOne) + convertToDouble(numberTwo);
         return sum;
+    }
+
+    @RequestMapping(value = "/minus/{numberOne}/{numberTwo}", method = RequestMethod.GET)
+    public Double minus(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception{
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo)){
+            throw new UnsupportedMethodOperationException("Please set a numeric value");
+        }
+        Double minus = convertToDouble(numberOne) - convertToDouble(numberTwo);
+        return minus;
+    }
+
+    @RequestMapping(value = "/times/{numberOne}/{numberTwo}", method = RequestMethod.GET)
+    public Double times(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception{
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo)){
+            throw new UnsupportedMethodOperationException("Please set a numeric value");
+        }
+        Double times = convertToDouble(numberOne) * convertToDouble(numberTwo);
+        return times;
+    }
+
+    @RequestMapping(value = "/divided/{numberOne}/{numberTwo}", method = RequestMethod.GET)
+    public Double divided(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception{
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo)){
+            throw new UnsupportedMethodOperationException("Please set a numeric value");
+        }
+        if(numberTwo.equals("0") ){
+            throw new UnsupportedMethodOperationException("Second number must be different than 0");
+
+        }
+
+        Double divided = convertToDouble(numberOne) / convertToDouble(numberTwo);
+        return divided;
+    }
+
+    @RequestMapping(value = "/sqrt/{numberOne}/{numberTwo}", method = RequestMethod.GET)
+    public Integer sqrt(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception{
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo)){
+            throw new UnsupportedMethodOperationException("Please set a numeric value");
+        }
+        if(numberTwo.equals("0") ){
+            throw new UnsupportedMethodOperationException("Second number must be different than 0");
+
+        }
+
+        Integer sqrt = Math.sqrt(convertToDouble(numberOne), convertToDouble(numberTwo));
+        return sqrt;
     }
 
     public Double convertToDouble(String strNumber) {
