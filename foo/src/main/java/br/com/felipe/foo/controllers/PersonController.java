@@ -37,5 +37,10 @@ public class PersonController {
         return service.create(person);
     }
 
+    @DeleteMapping("/{id}")
+    public void delete( @PathVariable(value = "id") String id){
+            service.delete(id);
+    }
+
 
 }

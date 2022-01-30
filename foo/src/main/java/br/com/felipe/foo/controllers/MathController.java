@@ -2,6 +2,7 @@ package br.com.felipe.foo.controllers;
 
 import br.com.felipe.foo.exception.UnsupportedMethodOperationException;
 import br.com.felipe.foo.math.SimpleMath;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +16,15 @@ import static br.com.felipe.foo.request.converters.NumberConverter.isNumeric;
 public class MathController {
     private static final String VALUERROR =  "Please set a numeric value";
 
+    @Autowired
+    private SimpleMath math;
+
     @GetMapping(value = "/sum/{numberOne}/{numberTwo}")
     public Double sum(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo){
         if (!isNumeric(numberOne) || !isNumeric(numberTwo)) {
             throw new UnsupportedMethodOperationException(VALUERROR);
         }
-        return SimpleMath.sum(convertToDouble(numberOne), convertToDouble(numberTwo));
+        return math.sum(convertToDouble(numberOne), convertToDouble(numberTwo));
     }
 
     @GetMapping(value = "/minus/{numberOne}/{numberTwo}")
@@ -29,7 +33,7 @@ public class MathController {
             throw new UnsupportedMethodOperationException(VALUERROR);
         }
 
-        return SimpleMath.minus(convertToDouble(numberOne) , convertToDouble(numberTwo));
+        return math.minus(convertToDouble(numberOne) , convertToDouble(numberTwo));
     }
 
     @GetMapping(value = "/times/{numberOne}/{numberTwo}")
@@ -38,7 +42,7 @@ public class MathController {
             throw new UnsupportedMethodOperationException(VALUERROR);
         }
 
-        return SimpleMath.times(convertToDouble(numberOne) , convertToDouble(numberTwo));
+        return math.times(convertToDouble(numberOne) , convertToDouble(numberTwo));
     }
 
     @GetMapping(value = "/divided/{numberOne}/{numberTwo}")
@@ -52,7 +56,7 @@ public class MathController {
         }
 
 
-        return SimpleMath.divided(convertToDouble(numberOne) , convertToDouble(numberTwo));
+        return math.divided(convertToDouble(numberOne) , convertToDouble(numberTwo));
     }
 
     @GetMapping(value = "/sqrt/{numberOne}")
@@ -65,7 +69,7 @@ public class MathController {
             throw new UnsupportedMethodOperationException("The value must be a positive number");
         }
 
-        return SimpleMath.sqrt(convertedNumber);
+        return math.sqrt(convertedNumber);
     }
     @GetMapping(value = "/mean/{numberOne}/{numberTwo}")
     public Double mean(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo){
@@ -73,7 +77,7 @@ public class MathController {
             throw new UnsupportedMethodOperationException(VALUERROR);
         }
 
-        return SimpleMath.mean(convertToDouble(numberOne) , convertToDouble(numberTwo));
+        return math.mean(convertToDouble(numberOne) , convertToDouble(numberTwo));
     }
 
     @GetMapping(value = "/hallo")
