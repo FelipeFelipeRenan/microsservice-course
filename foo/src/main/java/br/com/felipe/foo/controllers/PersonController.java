@@ -27,5 +27,10 @@ public class PersonController {
         return service.findAll();
     }
 
+    @PostMapping(value = "/" ,produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Person create(@RequestBody Person person){
+        return service.create(person);
+    }
+
 
 }
