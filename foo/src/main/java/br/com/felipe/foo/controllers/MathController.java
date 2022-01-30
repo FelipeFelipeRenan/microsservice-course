@@ -1,16 +1,18 @@
 package br.com.felipe.foo.controllers;
 
-
 import br.com.felipe.foo.exception.UnsupportedMethodOperationException;
 import br.com.felipe.foo.math.SimpleMath;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import static br.com.felipe.foo.request.converters.NumberConverter.convertToDouble;
 import static br.com.felipe.foo.request.converters.NumberConverter.isNumeric;
 
 @RestController
-public class MathController{
-
+public class MathController {
     private static final String VALUERROR =  "Please set a numeric value";
 
     @GetMapping(value = "/sum/{numberOne}/{numberTwo}")
@@ -74,5 +76,9 @@ public class MathController{
         return SimpleMath.mean(convertToDouble(numberOne) , convertToDouble(numberTwo));
     }
 
+    @GetMapping(value = "/hallo")
+    public ResponseEntity<String> hallo(){
+        return new ResponseEntity<>("Hello world", HttpStatus.OK);
+    }
 
 }
