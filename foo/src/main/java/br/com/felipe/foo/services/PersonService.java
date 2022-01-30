@@ -24,7 +24,7 @@ public class PersonService {
 
     public List<Person> findAll(){
 
-        List<Person> persons = new ArrayList<Person>();
+        List<Person> persons = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             Person person = mockPerson(i);
             persons.add(person);
@@ -38,6 +38,16 @@ public class PersonService {
 
         return person;
     }
+
+    public Person update(Person person){
+
+        return person;
+    }
+
+    public void delete(String id){
+        
+    }
+
 
     private Person mockPerson(int i) {
         Person person = new Person();

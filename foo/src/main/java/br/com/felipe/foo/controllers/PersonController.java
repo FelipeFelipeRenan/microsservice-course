@@ -32,5 +32,10 @@ public class PersonController {
         return service.create(person);
     }
 
+    @PutMapping(value = "/" ,produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Person update(@RequestBody Person person){
+        return service.create(person);
+    }
+
 
 }
