@@ -1,0 +1,5 @@
+
+h
+java:S6206"RRefactor this class declaration to use 'record Greeting(long id, String content)'.(§Ç€
+ó
+java:S1598"×This file "Greeting.java" should be located in "br/com/felipe/foo" directory, not in "/home/feliperenan/Trabalhos/Langs/JAVA/spring/microsservice-course/greeting-service/src/main/java/com/br/felipe/greetingservice".(ùß…úÿÿÿÿ
