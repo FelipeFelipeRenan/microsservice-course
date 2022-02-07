@@ -11,5 +11,5 @@ management:
           - '*'
 
 greeting-service:
-  greeting: "Olá"
+  greeting: "Hola"
   default-value: "Mundo"
