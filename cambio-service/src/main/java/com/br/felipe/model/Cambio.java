@@ -4,16 +4,36 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+
+@Entity(name = "cambio")
 public class Cambio implements Serializable{
 	
 
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	
+	@Column(name = "from_currency ", nullable = false, length = 3)
 	private String from;
+	
+	@Column(name = "to_currency ", nullable = false, length = 3)
 	private String to;
-	private BigDecimal convertionFactor;
+	
+	@Column(nullable = false)
+	private BigDecimal conversionFactor;
+	
+	@Transient
 	private BigDecimal convertedValue;
+	
+	@Transient
 	private String enviroment;
 	
 	public Cambio(){
@@ -25,7 +45,7 @@ public class Cambio implements Serializable{
 		this.id = id;
 		this.from = from;
 		this.to = to;
-		this.convertionFactor = convertionFactor;
+		this.conversionFactor = convertionFactor;
 		this.convertedValue = convertedValue;
 		this.enviroment = enviroment;
 	}
@@ -47,11 +67,11 @@ public class Cambio implements Serializable{
 	public void setTo(String to) {
 		this.to = to;
 	}
-	public BigDecimal getConvertionFactor() {
-		return convertionFactor;
+	public BigDecimal getConversionFactor() {
+		return conversionFactor;
 	}
-	public void setConvertionFactor(BigDecimal convertionFactor) {
-		this.convertionFactor = convertionFactor;
+	public void setConversionFactor(BigDecimal convertionFactor) {
+		this.conversionFactor = convertionFactor;
 	}
 	public BigDecimal getConvertedValue() {
 		return convertedValue;
@@ -67,7 +87,7 @@ public class Cambio implements Serializable{
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(convertedValue, convertionFactor, enviroment, from, id, to);
+		return Objects.hash(convertedValue, conversionFactor, enviroment, from, id, to);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -79,7 +99,7 @@ public class Cambio implements Serializable{
 			return false;
 		Cambio other = (Cambio) obj;
 		return Objects.equals(convertedValue, other.convertedValue)
-				&& Objects.equals(convertionFactor, other.convertionFactor)
+				&& Objects.equals(conversionFactor, other.conversionFactor)
 				&& Objects.equals(enviroment, other.enviroment) && Objects.equals(from, other.from) && id == other.id
 				&& Objects.equals(to, other.to);
 	}
