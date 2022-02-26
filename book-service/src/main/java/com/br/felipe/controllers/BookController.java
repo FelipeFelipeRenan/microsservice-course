@@ -1,6 +1,9 @@
 package com.br.felipe.controllers;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +50,20 @@ public class BookController {
 		book.setEnvironment(port);
 		book.setPrice(cambio.getConvertedValue());
 		return book;
+	}
+	@GetMapping(value = "/books/{currency}")
+	//@Retry(name = "default" , fallbackMethod = "fallbackMethod")
+	public List<Book> findAllBooks(@PathVariable(value = "currency") String currency){
+		List<Book> books = repository.findAll();
+		List<Book> finalBooks= new ArrayList<>(); 
+		for(Book book: books) {
+			var cambio = proxy.getCambio(book.getPrice(), "USD", currency);
+			book.setPrice(cambio.getConvertedValue());
+			finalBooks.add(book);
+		}
+		
+		
+		return finalBooks;
 	}
 	
 	public String fallbackMethod(Exception ex){
