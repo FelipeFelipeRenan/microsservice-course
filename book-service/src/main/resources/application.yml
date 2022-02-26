@@ -10,6 +10,12 @@ resilience4j:
       default:
         max-attempts: 3
         wait-duration: 1s
+      books:
+        max-attempts: 3
+        wait-duration: 1s
+      book:
+        max-attempts: 3
+        wait-duration: 1s
 spring:
   application:
     name: book-service
