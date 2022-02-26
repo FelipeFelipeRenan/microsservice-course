@@ -12,6 +12,8 @@ import com.br.felipe.models.Book;
 import com.br.felipe.proxy.CambioProxy;
 import com.br.felipe.repositories.BookRepository;
 
+import io.github.resilience4j.retry.annotation.Retry;
+
 
 @RestController
 @RequestMapping(value = "/book-service")
@@ -27,6 +29,7 @@ public class BookController {
 	private CambioProxy proxy;
 	
 	@GetMapping(value = "/{id}/{currency}")
+	@Retry(name = "default" , fallbackMethod = "fallbackMethod")
 	public Book findBook(
 			@PathVariable(value = "id") Long id,
 			@PathVariable(value = "currency") String currency
@@ -44,6 +47,10 @@ public class BookController {
 		book.setEnvironment(port);
 		book.setPrice(cambio.getConvertedValue());
 		return book;
+	}
+	
+	public String fallbackMethod(Exception ex){
+		return "Error";
 	}
 
 }
