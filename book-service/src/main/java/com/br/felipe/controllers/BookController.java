@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +41,7 @@ public class BookController {
 			
 	@GetMapping(value = "/{id}/{currency}")
 
-	public Book findBook(
+	public ResponseEntity<Book > findbook(
 			@PathVariable(value = "id") Long id,
 			@PathVariable(value = "currency") String currency
 			) {
@@ -53,11 +55,11 @@ public class BookController {
 		var port = environment.getProperty("local.server.port");
 		book.setEnvironment(port);
 		book.setPrice(cambio.getConvertedValue());
-		return book;
+		return new ResponseEntity<Book>(book, HttpStatus.OK);
 	}
 	@GetMapping(value = "/books/{currency}")
 	@Retry(name = "books", fallbackMethod = "fallback_books")
-	public List<Book> findAllBooks(@PathVariable(value = "currency") String currency){
+	public ResponseEntity<List<Book>> findAllBooks(@PathVariable(value = "currency") String currency){
 		
 		logger.info("Request to findAllBook is received!!!");
 		List<Book> books = repository.findAll();
@@ -71,13 +73,13 @@ public class BookController {
 		}
 		
 		
-		return finalBooks;
+		return new ResponseEntity<List<Book>>(finalBooks, HttpStatus.OK);
 	}
 	
-	public List<String> fallback_books(Exception ex){
+	public ResponseEntity<String> fallback_books(Exception ex){
 		List<String> books = new ArrayList<>();
 		books.add("ERRO");
-		return books;
+		return new ResponseEntity<String>("Erro", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 
