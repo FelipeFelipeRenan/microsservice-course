@@ -22,8 +22,10 @@ import com.br.felipe.repositories.BookRepository;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-
+@Tag(name = "Book endpoint")
 @RestController
 @RequestMapping(value = "/book-service")
 public class BookController {
@@ -39,8 +41,8 @@ public class BookController {
 	
 	private Logger logger = LoggerFactory.getLogger(BookController.class);
 			
+	@Operation(summary = "find a specific book by your id")
 	@GetMapping(value = "/{id}/{currency}")
-
 	public ResponseEntity<Book > findbook(
 			@PathVariable(value = "id") Long id,
 			@PathVariable(value = "currency") String currency
@@ -57,6 +59,7 @@ public class BookController {
 		book.setPrice(cambio.getConvertedValue());
 		return new ResponseEntity<Book>(book, HttpStatus.OK);
 	}
+	@Operation(summary = "Get all books")
 	@GetMapping(value = "/books/{currency}")
 	@Retry(name = "books", fallbackMethod = "fallback_books")
 	public ResponseEntity<List<Book>> findAllBooks(@PathVariable(value = "currency") String currency){
@@ -79,7 +82,7 @@ public class BookController {
 	public ResponseEntity<String> fallback_books(Exception ex){
 		List<String> books = new ArrayList<>();
 		books.add("ERRO");
-		return new ResponseEntity<String>("Erro", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<String>("<h1>Erro</h1>", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 
