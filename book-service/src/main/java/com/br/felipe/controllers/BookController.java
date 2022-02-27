@@ -25,7 +25,7 @@ import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Book endpoint")
+@Tag(name = "Book endpoints")
 @RestController
 @RequestMapping(value = "/book-service")
 public class BookController {
