@@ -7,6 +7,12 @@ services:
       - 8761:8761
     networks:
       - felipe-network
+  zipkin:
+    image: openzipkin/zipkin:2.23.3
+    ports:
+      - 9411:9411
+    networks:
+      - felipe-network
 
 networks:
   felipe-network:
