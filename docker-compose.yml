@@ -1,18 +1,32 @@
 version: '3.4'
 
 services:
+  zipkin-server:
+    image: openzipkin/zipkin:2.23.3
+    ports:
+      - 9411:9411
+    networks:
+      - felipe-network
   naming-server:
     image: felipedev21/naming-server:0.0.1-SNAPSHOT
     ports:
       - 8761:8761
     networks:
       - felipe-network
-  zipkin:
-    image: openzipkin/zipkin:2.23.3
+
+  api-gateway:
+    image: felipedev21/api-gateway:0.0.1-SNAPSHOT
     ports:
-      - 9411:9411
+      - 8765:8765
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http:/zipkin-server:9411/
+    
     networks:
       - felipe-network
+
 
 networks:
   felipe-network:
