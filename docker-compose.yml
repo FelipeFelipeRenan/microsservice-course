@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  naming-server:
+    image: felipedev21/naming-server:0.0.1-SNAPSHOT
+    ports:
+      - 8761:8761
+    networks:
+      - felipe-network
+
+networks:
+  felipe-network:
+    driver: bridge
