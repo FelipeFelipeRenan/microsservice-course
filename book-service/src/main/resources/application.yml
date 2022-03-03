@@ -33,11 +33,9 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      dialect: org.hibernate.dialect.MySQL57Dialect
   flyway:
-    url: jdbc:mysql://localhost:3306
-    schemas:
-    - book_service
+    url: jdbc:mysql://localhost:3306/book_service?useTimeZone=true&serverTimeZone=UTC
     user: root
     password: 12345
   sleuth:

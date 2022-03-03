@@ -7,6 +7,53 @@ services:
       - 9411:9411
     networks:
       - felipe-network
+      
+  cambio-db:
+    image: mysql:8.0.28
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: 123M45
+      MYSQL_DATABASE: cambio_service
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_TCP_PORT: 3308
+      
+      
+    ports:
+      - 3308:3308
+    
+    expose: 
+      - 3308
+    
+    networks:
+      - felipe-network
+      
+  book-db:
+    image: mysql:8.0.28
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: 123M45
+      MYSQL_DATABASE: book_service
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_TCP_PORT: 3310
+      
+      
+    ports:
+      - 3310:3310
+    
+    expose: 
+      - 3310
+    
+    networks:
+      - felipe-network
+  
   naming-server:
     image: felipedev21/naming-server:0.0.1-SNAPSHOT
     ports:
