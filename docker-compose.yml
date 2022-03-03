@@ -4,6 +4,20 @@ services:
     image: openzipkin/zipkin:2.23.2
     ports:
     - 9411:9411
+    restart: always
+    depends_on: 
+    - rabbit-mq
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+    networks:
+    - felipe-network
+    
+    
+  rabbit-mq:
+    image: rabbitmq:3.8.14-management
+    ports:
+    - 5672:5672
+    - 15672:15672
     networks:
     - felipe-network
   
@@ -62,9 +76,13 @@ services:
     - 8765:8765
     depends_on:
     - naming-server
+    - rabbit-mq
     environment:
       EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
       SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+      SPRING_RABBITMQ_HOST: rabbit-mq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
     networks:
     - felipe-network
   
@@ -78,7 +96,10 @@ services:
     environment:
       TZ: America/Sao_Paulo
       EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
-      SPRING.ZIPKIN.BASEURL: http:/zipkin-server:9411/
+      SPRING.ZIPKIN.BASEURL: http:/zipkin-server:9411/  
+      RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+      SPRING_RABBITMQ_HOST: rabbit-mq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
       SPRING.APPLICATION.NAME: cambio-service
       SPRING.DATASOURCE.URL: jdbc:mysql://cambio-db:3308/cambio_service?useSSL=false&&serverTimeZone=UTC&TLSProtocols=TLSv1.2
       SPRING.DATASOURCE.USERNAME: root
@@ -91,6 +112,7 @@ services:
     depends_on:
     - naming-server
     - cambio-db
+    - rabbit-mq
     networks:
     - felipe-network
     
@@ -105,6 +127,9 @@ services:
       TZ: America/Sao_Paulo
       EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
       SPRING.ZIPKIN.BASEURL: http:/zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+      SPRING_RABBITMQ_HOST: rabbit-mq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
       SPRING.APPLICATION.NAME: book-service
       SPRING.DATASOURCE.URL: jdbc:mysql://book-db:3310/book_service?useSSL=false&&serverTimeZone=UTC&TLSProtocols=TLSv1.2
       SPRING.DATASOURCE.USERNAME: root
@@ -117,6 +142,7 @@ services:
     depends_on:
     - naming-server
     - book-db
+    - rabbit-mq
     networks:
     - felipe-network
     
