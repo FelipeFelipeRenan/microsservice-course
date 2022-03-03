@@ -1,13 +1,11 @@
 version: '3.4'
-
 services:
   zipkin-server:
     image: openzipkin/zipkin:2.23.3
     ports:
-      - 9411:9411
+    - 9411:9411
     networks:
-      - felipe-network
-      
+    - felipe-network
   cambio-db:
     image: mysql:8.0.28
     command: --default-authentication-plugin=mysql_native_password
@@ -20,17 +18,12 @@ services:
       MYSQL_DATABASE: cambio_service
       MYSQL_ROOT_HOST: '%'
       MYSQL_TCP_PORT: 3308
-      
-      
     ports:
-      - 3308:3308
-    
-    expose: 
-      - 3308
-    
+    - 3308:3308
+    expose:
+    - 3308
     networks:
-      - felipe-network
-      
+    - felipe-network
   book-db:
     image: mysql:8.0.28
     command: --default-authentication-plugin=mysql_native_password
@@ -43,38 +36,53 @@ services:
       MYSQL_DATABASE: book_service
       MYSQL_ROOT_HOST: '%'
       MYSQL_TCP_PORT: 3310
-      
-      
     ports:
-      - 3310:3310
-    
-    expose: 
-      - 3310
-    
+    - 3310:3310
+    expose:
+    - 3310
     networks:
-      - felipe-network
-  
+    - felipe-network
   naming-server:
     image: felipedev21/naming-server:0.0.1-SNAPSHOT
     ports:
-      - 8761:8761
+    - 8761:8761
     networks:
-      - felipe-network
-
+    - felipe-network
   api-gateway:
     image: felipedev21/api-gateway:0.0.1-SNAPSHOT
     ports:
-      - 8765:8765
+    - 8765:8765
     depends_on:
-      - naming-server
+    - naming-server
     environment:
       EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
       SPRING.ZIPKIN.BASEURL: http:/zipkin-server:9411/
-    
+      SPRING.APPLICATION.NAME: cambio-service
+      SPRING.DATASOURCE.URL: jdbc:mysql://localhost:3306/cambio_service?useTimeZone=true&serverTimeZone=UTC
+      SPRING.DATASOURCE.USERNAME: root
+      SPRING.DATASOURCE.PASSWORD: 12345
+      SPRING.FLYWAY.URL: jdbc:mysql://localhost:3306/cambio_service?useTimeZone=true&serverTimeZone=UTC
+      SPRING.FLYWAY.USER: root
+      SPRING.FLYWAY.PASSWORD: 12345
     networks:
-      - felipe-network
-
-
+    - felipe-network
+  cambio-service:
+    image: felipedev21/cambio-service
+    restart: always
+    build:
+      context: .
+      dockerfile: cambio-service/Dockerfile
+    environment:
+      TZ: America/Sao_Paulo
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http:/zipkin-server:9411/
+    ports:
+    - 8000:8000
+    depends_on:
+    - naming-server
+    - cambio-db
+    networks:
+    - felipe-network
 networks:
   felipe-network:
     driver: bridge
