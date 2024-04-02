@@ -64,6 +64,9 @@ services:
   
   naming-server:
     image: felipedev21/naming-server:0.0.1-SNAPSHOT
+    build: 
+      context: .
+      dockerfile: naming-server/Dockerfile
     ports:
     - 8761:8761
     networks:
@@ -72,6 +75,9 @@ services:
   
   api-gateway:
     image: felipedev21/api-gateway:0.0.1-SNAPSHOT
+    build: 
+      context: .
+      dockerfile: api-gateway/Dockerfile
     ports:
     - 8765:8765
     depends_on:
