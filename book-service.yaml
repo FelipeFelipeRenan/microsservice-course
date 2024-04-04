@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-service
+  template:
+    metadata:
+      labels:
+        app: book-service
+    spec:
+      containers:
+        - name: book-service
+          image: felipedev21/book-service:latest
+          env:
+            - name: TZ
+              value: "America/Sao_Paulo"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://naming-server:8761/eureka"
+            - name: SPRING_ZIPKIN_BASEURL
+              value: "http:/zipkin-server:9411/"
+            - name: RABBIT_URI
+              value: "amqp://guest:guest@rabbit-mq:5672"
+            - name: SPRING_RABBITMQ_HOST
+              value: "rabbit-mq"
+            - name: SPRING_ZIPKIN_SENDER_TYPE
+              value: "rabbit"
+            - name: SPRING_APPLICATION_NAME
+              value: "book-service"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://book-db:3310/book_service?useSSL=false&&serverTimeZone=UTC&TLSProtocols=TLSv1.2"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "12345"
+            - name: SPRING_FLYWAY_URL
+              value: "jdbc:mysql://book-db:3310/book_service?useSSL=false&&serverTimeZone=UTC&TLSProtocols=TLSv1.2"
+            - name: SPRING_FLYWAY_USER
+              value: "root"
+            - name: SPRING_FLYWAY_PASSWORD
+              value: "12345"
+          ports:
+            - containerPort: 8100
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-service-service
+spec:
+  ports:
+    - port: 8100
+      targetPort: 8100
+  selector:
+    app: book-service

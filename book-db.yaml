@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-db
+  template:
+    metadata:
+      labels:
+        app: book-db
+    spec:
+      containers:
+        - name: book-db
+          image: mysql:8.0.28
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "12345"
+            - name: MYSQL_USER
+              value: "docker"
+            - name: MYSQL_PASSWORD
+              value: "123M45"
+            - name: MYSQL_DATABASE
+              value: "book_service"
+          ports:
+            - containerPort: 3310
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-db-service
+spec:
+  ports:
+    - port: 3310
+      targetPort: 3310
+  selector:
+    app: book-db
